@@ -21,7 +21,6 @@
     <input type="tel" id="quantity" name="quantity" pattern="[0-9]*" inputmode="numeric" value="4">
     <br>
     <input type="button" value="Ajouter" onclick="addPlank()">
-    <input type="button" value="Calculer" onclick="calculateEdgeProtection()">
 </form>
 
 <table id="plankTable">
@@ -30,6 +29,7 @@
         <th>Largeur</th>
         <th>Quantité</th>
         <th>Nombre de paquets</th>
+        <th>Actions</th>
     </tr>
 </table>
 
@@ -55,16 +55,89 @@ function addPlank() {
 
     var table = document.getElementById("plankTable");
     var row = table.insertRow(-1);
+    row.id = "row-" + (planks.length - 1); // Ajouter cette ligne
     var widthCell = row.insertCell(0);
     var lengthCell = row.insertCell(1);
     var quantityCell = row.insertCell(2);
     var packageCell = row.insertCell(3);
+    var actionsCell = row.insertCell(4);
 
     widthCell.innerHTML = width + " mm";
     lengthCell.innerHTML = length + " mm";
     quantityCell.innerHTML = quantity + " pcs";
     packageCell.innerHTML = Math.ceil(quantity / 2);
+    actionsCell.innerHTML = '<button onclick="editPlank(' + (planks.length - 1) + ')">Modifier</button>';
+
+    calculateEdgeProtection(); // Automatically calculate the results
 }
+
+
+function editPlank(index) {
+    var plank = planks[index];
+    var row = document.getElementById("row-" + index);
+    
+    var widthInput = document.createElement("input");
+    widthInput.type = "tel";
+    widthInput.pattern = "[0-9]*";
+    widthInput.inputmode = "numeric";
+    widthInput.value = plank.width;
+    widthInput.onchange = function() {
+        plank.width = widthInput.value;
+        row.cells[0].innerText = plank.width + " mm";
+    };
+
+    var lengthInput = document.createElement("input");
+    lengthInput.type = "tel";
+    lengthInput.pattern = "[0-9]*";
+    lengthInput.inputmode = "numeric";
+    lengthInput.value = plank.length;
+    lengthInput.onchange = function() {
+        plank.length = lengthInput.value;
+        row.cells[1].innerText = plank.length + " mm";
+    };
+
+    var quantityInput = document.createElement("input");
+    quantityInput.type = "tel";
+    quantityInput.pattern = "[0-9]*";
+    quantityInput.inputmode = "numeric";
+    quantityInput.value = plank.quantity;
+    quantityInput.onchange = function() {
+        plank.quantity = quantityInput.value;
+        row.cells[2].innerText = plank.quantity + " pcs";
+        row.cells[3].innerText = Math.ceil(plank.quantity / 2);
+    };
+
+    var saveButton = document.createElement("button");
+    saveButton.textContent = "Enregistrer";
+    saveButton.onclick = function() {
+        calculateEdgeProtection();
+    };
+
+     var closeButton = document.createElement("button");
+    closeButton.textContent = "Fermer";
+    closeButton.onclick = function() {
+        row.cells[0].innerText = plank.width + " mm";
+        row.cells[1].innerText = plank.length + " mm";
+        row.cells[2].innerText = plank.quantity + " pcs";
+        row.cells[3].innerText = Math.ceil(plank.quantity / 2);
+        row.cells[4].innerHTML = '<button onclick="editPlank(' + index + ')">Modifier</button>';
+    };
+
+
+    row.cells[4].innerText = '';
+    row.cells[4].appendChild(closeButton);
+
+    var actionsCell = document.getElementById("plankTable").rows[index + 1].cells[4];
+    actionsCell.innerHTML = "";
+    actionsCell.appendChild(widthInput);
+    actionsCell.appendChild(lengthInput);
+    actionsCell.appendChild(quantityInput);
+    actionsCell.appendChild(saveButton);
+    actionsCell.appendChild(closeButton);
+    calculateEdgeProtection();
+
+};
+
 
 function calculateEdgeProtection() {
     var widthProtectionSize = 0;
@@ -81,37 +154,36 @@ function calculateEdgeProtection() {
     }
 
     var resultsContainer = document.getElementById("resultsContainer");
-resultsContainer.innerHTML = "";
-resultsContainer.style.overflowX = "auto"; // Ajouter le défilement horizontal
+    resultsContainer.innerHTML = "";
+    resultsContainer.style.overflowX = "auto"; // Ajouter le défilement horizontal
 
-for (var i = 0; i < planks.length; i++) {
-    var plank = planks[i];
-    
-    var container = document.createElement("div");
-    container.style.display = "flex";
-    container.style.justifyContent = "space-between";
-    container.style.alignItems = "center";
-    container.style.marginBottom = "20px";
+    for (var i = 0; i < planks.length; i++) {
+        var plank = planks[i];
 
-    var svgContainer = createSvg(plank, i);
-    svgContainer.style.flex = "0 0 auto"; // Ajouter cette ligne
-    container.appendChild(svgContainer);
+        var container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.justifyContent = "space-between";
+        container.style.alignItems = "center";
+        container.style.marginBottom = "20px";
 
-    var result = document.createElement("p");
-    result.innerHTML = "Rang " + (i + 1) + ":<br>" +
-        (2 * parseInt(plank.quantity))+ " cornières :" + parseInt(plank.width) + " mm."  + " Largeur<br>" +
-        (2 * parseInt(plank.quantity))+ " cornières : " + parseInt(plank.length) + " mm." + " Longueur<br><br>";
-    result.style.flex = "0 0 auto"; // Ajouter cette ligne
-    result.style.whiteSpace = "nowrap"; // Ajouter cette ligne
-    container.appendChild(result);
+        var svgContainer = createSvg(plank, i);
+        svgContainer.style.flex = "0 0 auto"; // Ajouter cette ligne
+        container.appendChild(svgContainer);
 
-    resultsContainer.appendChild(container);
+        var result = document.createElement("p");
+        result.innerHTML = "Rang " + (i + 1) + ":<br>" +
+            (2 * parseInt(plank.quantity)) + " cornières :" + parseInt(plank.width) + " mm." + " Largeur<br>" +
+            (2 * parseInt(plank.quantity)) + " cornières : " + parseInt(plank.length) + " mm." + " Longueur<br><br>";
+        result.style.flex = "0 0 auto"; // Ajouter cette ligne
+        result.style.whiteSpace = "nowrap"; // Ajouter cette ligne
+        container.appendChild(result);
+
+        resultsContainer.appendChild(container);
+    }
 }
 
-    }
-    
-    function createSvg(plank, index) {
-    var rectWidth =  plank.length / 10; // Mettre à l'échelle la largeur
+function createSvg(plank, index) {
+    var rectWidth = plank.length / 10; // Mettre à l'échelle la largeur
     var rectHeight = plank.width / 10; // Mettre à l'échelle la longueur
 
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
