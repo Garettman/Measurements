@@ -85,12 +85,55 @@ function calculateEdgeProtection() {
 
     for (var i = 0; i < planks.length; i++) {
         var plank = planks[i];
+        var svg = createSvg(plank, i);
+        resultsContainer.appendChild(svg);
         var result = document.createElement("p");
         result.innerHTML = "Rang " + (i + 1) + ":<br>" +
             (2 * parseInt(plank.quantity))+ " cornières :" + parseInt(plank.width) + " mm."  + " Largeur<br>" +
             (2 * parseInt(plank.quantity))+ " cornières : " + parseInt(plank.length) + " mm." + " Longueur<br><br>";
         resultsContainer.appendChild(result);
     }
+
+    }
+    
+    function createSvg(plank, index) {
+    var rectWidth =  plank.length / 10; // Mettre à l'échelle la largeur
+    var rectHeight = plank.width / 10; // Mettre à l'échelle la longueur
+
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", rectWidth + 100); // Ajouter de l'espace pour le texte
+    svg.setAttribute("height", rectHeight + 50); // Ajouter de l'espace pour le texte
+
+    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("width", rectWidth);
+    rect.setAttribute("height", rectHeight);
+    rect.setAttribute("style", "fill:lightblue;stroke-width:3;stroke:rgb(0,0,0)");
+
+    svg.appendChild(rect);
+
+    var textWidth = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textWidth.setAttribute("x", rectWidth / 2);
+    textWidth.setAttribute("y", rectHeight + 20);
+    textWidth.setAttribute("fill", "black");
+    textWidth.textContent = parseInt(plank.length) + " mm";
+
+    svg.appendChild(textWidth);
+
+    var textHeight = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textHeight.setAttribute("x", rectWidth + 20);
+    textHeight.setAttribute("y", rectHeight / 2);
+    textHeight.setAttribute("fill", "black");
+    textHeight.textContent = parseInt(plank.width) + " mm";
+
+    svg.appendChild(textHeight);
+
+    return svg;
+}
+
+for (var i = 0; i < planks.length; i++) {
+    var plank = planks[i];
+    var svg = createSvg(plank, i);
+    resultsContainer.appendChild(svg);
 }
 </script>
 </body>
