@@ -1,14 +1,24 @@
-<h2>Calculateur de protections de bord</h2>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul de Protection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <h2>Calculateur de protections de bord</h2>
 
 <form id="plankForm">
     <label for="length">Longueur de la planche (en cm):</label>
-    <input type="number" id="length" name="length" value="2020">
+    <input type="tel" id="length" name="length" pattern="[0-9]*" inputmode="numeric" value="2020">
     <br>
     <label for="width">Largeur de la planche (en cm):</label>
-    <input type="number" id="width" name="width" value="935">
+    <input type="tel" id="width" name="width" pattern="[0-9]*" inputmode="numeric" value="935">
     <br>
     <label for="quantity">Quantité de planches:</label>
-    <input type="number" id="quantity" name="quantity" value="4">
+    <input type="tel" id="quantity" name="quantity" pattern="[0-9]*" inputmode="numeric" value="4">
     <br>
     <input type="button" value="Ajouter" onclick="addPlank()">
     <input type="button" value="Calculer" onclick="calculateEdgeProtection()">
@@ -24,6 +34,8 @@
 </table>
 
 <div id="resultsContainer"></div>
+
+</main>
 
 <script>
 var planks = [];
@@ -81,3 +93,5 @@ function calculateEdgeProtection() {
     }
 }
 </script>
+</body>
+</html>
