@@ -81,18 +81,32 @@ function calculateEdgeProtection() {
     }
 
     var resultsContainer = document.getElementById("resultsContainer");
-    resultsContainer.innerHTML = "";
+resultsContainer.innerHTML = "";
+resultsContainer.style.overflowX = "auto"; // Ajouter le défilement horizontal
 
-    for (var i = 0; i < planks.length; i++) {
-        var plank = planks[i];
-        var svg = createSvg(plank, i);
-        resultsContainer.appendChild(svg);
-        var result = document.createElement("p");
-        result.innerHTML = "Rang " + (i + 1) + ":<br>" +
-            (2 * parseInt(plank.quantity))+ " cornières :" + parseInt(plank.width) + " mm."  + " Largeur<br>" +
-            (2 * parseInt(plank.quantity))+ " cornières : " + parseInt(plank.length) + " mm." + " Longueur<br><br>";
-        resultsContainer.appendChild(result);
-    }
+for (var i = 0; i < planks.length; i++) {
+    var plank = planks[i];
+    
+    var container = document.createElement("div");
+    container.style.display = "flex";
+    container.style.justifyContent = "space-between";
+    container.style.alignItems = "center";
+    container.style.marginBottom = "20px";
+
+    var svgContainer = createSvg(plank, i);
+    svgContainer.style.flex = "0 0 auto"; // Ajouter cette ligne
+    container.appendChild(svgContainer);
+
+    var result = document.createElement("p");
+    result.innerHTML = "Rang " + (i + 1) + ":<br>" +
+        (2 * parseInt(plank.quantity))+ " cornières :" + parseInt(plank.width) + " mm."  + " Largeur<br>" +
+        (2 * parseInt(plank.quantity))+ " cornières : " + parseInt(plank.length) + " mm." + " Longueur<br><br>";
+    result.style.flex = "0 0 auto"; // Ajouter cette ligne
+    result.style.whiteSpace = "nowrap"; // Ajouter cette ligne
+    container.appendChild(result);
+
+    resultsContainer.appendChild(container);
+}
 
     }
     
