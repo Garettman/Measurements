@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Mon site Web</h1>
+
+<p>Bienvenue sur mon site Web.</p>
+
+<!-- Début de l'application de calcul de protection de bord -->
+<h2>Calculateur de protections de bord</h2>
+
+<form id="plankForm">
+  <label for="length">Longueur de la planche (en cm):</label><br>
+  <input type="number" id="length" name="length"><br>
+  <label for="width">Largeur de la planche (en cm):</label><br>
+  <input type="number" id="width" name="width"><br>
+  <label for="quantity">Quantité de planches:</label><br>
+  <input type="number" id="quantity" name="quantity"><br>
+  <input type="button" value="Calculer" onclick="calculateEdgeProtection()">
+</form>
+
+<p id="result"></p>
+
+<script>
+function calculateEdgeProtection() {
+  var length = document.getElementById("length").value;
+  var width = document.getElementById("width").value;
+  var quantity = document.getElementById("quantity").value;
+
+  var edgeProtectionSize = 2 * (parseInt(length) + parseInt(width));
+  var edgeProtectionQuantity = 4 * quantity;
+
+  document.getElementById("result").innerHTML = "Taille de protection de bord nécessaire: " + edgeProtectionSize + " cm. Quantité nécessaire: " + edgeProtectionQuantity;
+}
+</script>
+<!-- Fin de l'application de calcul de protection de bord -->
+
+</body>
+</html>
