@@ -86,6 +86,7 @@ function editPlank(index) {
         input.pattern = "[0-9]*";
         input.inputmode = "numeric";
         input.value = plank[properties[i]];
+        input.size = input.value.length; // set the size to the length of the value
         inputs.push(input);
         cells[i].innerHTML = '';
         cells[i].appendChild(input);
