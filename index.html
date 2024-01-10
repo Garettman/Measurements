@@ -1,39 +1,83 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<h1>Mon site Web</h1>
-
-<p>Bienvenue sur mon site Web.</p>
-
-<!-- Début de l'application de calcul de protection de bord -->
 <h2>Calculateur de protections de bord</h2>
 
 <form id="plankForm">
-  <label for="length">Longueur de la planche (en cm):</label><br>
-  <input type="number" id="length" name="length"><br>
-  <label for="width">Largeur de la planche (en cm):</label><br>
-  <input type="number" id="width" name="width"><br>
-  <label for="quantity">Quantité de planches:</label><br>
-  <input type="number" id="quantity" name="quantity"><br>
-  <input type="button" value="Calculer" onclick="calculateEdgeProtection()">
+    <label for="length">Longueur de la planche (en cm):</label>
+    <input type="number" id="length" name="length" value="2020">
+    <br>
+    <label for="width">Largeur de la planche (en cm):</label>
+    <input type="number" id="width" name="width" value="935">
+    <br>
+    <label for="quantity">Quantité de planches:</label>
+    <input type="number" id="quantity" name="quantity" value="4">
+    <br>
+    <input type="button" value="Ajouter" onclick="addPlank()">
+    <input type="button" value="Calculer" onclick="calculateEdgeProtection()">
 </form>
 
-<p id="result"></p>
+<table id="plankTable">
+    <tr>
+        <th>Longueur</th>
+        <th>Largeur</th>
+        <th>Quantité</th>
+        <th>Nombre de paquets</th>
+    </tr>
+</table>
+
+<div id="resultsContainer"></div>
 
 <script>
+var planks = [];
+
+function addPlank() {
+    var width = document.getElementById("width").value;
+    var length = document.getElementById("length").value;
+    var quantity = document.getElementById("quantity").value;
+
+    var plank = {
+        width: width,
+        length: length,
+        quantity: quantity
+    };
+
+    planks.push(plank);
+
+    var table = document.getElementById("plankTable");
+    var row = table.insertRow(-1);
+    var widthCell = row.insertCell(0);
+    var lengthCell = row.insertCell(1);
+    var quantityCell = row.insertCell(2);
+    var packageCell = row.insertCell(3);
+
+    widthCell.innerHTML = width + " mm";
+    lengthCell.innerHTML = length + " mm";
+    quantityCell.innerHTML = quantity + " pcs";
+    packageCell.innerHTML = Math.ceil(quantity / 2);
+}
+
 function calculateEdgeProtection() {
-  var length = document.getElementById("length").value;
-  var width = document.getElementById("width").value;
-  var quantity = document.getElementById("quantity").value;
+    var widthProtectionSize = 0;
+    var lengthProtectionSize = 0;
+    var widthProtectionQuantity = 0;
+    var lengthProtectionQuantity = 0;
 
-  var edgeProtectionSize = 2 * (parseInt(length) + parseInt(width));
-  var edgeProtectionQuantity = 4 * quantity;
+    for (var i = 0; i < planks.length; i++) {
+        var plank = planks[i];
+        widthProtectionSize += parseInt(plank.width);
+        lengthProtectionSize += parseInt(plank.length);
+        widthProtectionQuantity += 2 * parseInt(plank.quantity);
+        lengthProtectionQuantity += 2 * parseInt(plank.quantity);
+    }
 
-  document.getElementById("result").innerHTML = "Taille de protection de bord nécessaire: " + edgeProtectionSize + " cm. Quantité nécessaire: " + edgeProtectionQuantity;
+    var resultsContainer = document.getElementById("resultsContainer");
+    resultsContainer.innerHTML = "";
+
+    for (var i = 0; i < planks.length; i++) {
+        var plank = planks[i];
+        var result = document.createElement("p");
+        result.innerHTML = "Rang " + (i + 1) + ":<br>" +
+            (2 * parseInt(plank.quantity))+ " cornières :" + parseInt(plank.width) + " mm."  + " Largeur<br>" +
+            (2 * parseInt(plank.quantity))+ " cornières : " + parseInt(plank.length) + " mm." + " Longueur<br><br>";
+        resultsContainer.appendChild(result);
+    }
 }
 </script>
-<!-- Fin de l'application de calcul de protection de bord -->
-
-</body>
-</html>
