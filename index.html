@@ -76,66 +76,37 @@ function editPlank(index) {
     var plank = planks[index];
     var row = document.getElementById("row-" + index);
     
-    var widthInput = document.createElement("input");
-    widthInput.type = "tel";
-    widthInput.pattern = "[0-9]*";
-    widthInput.inputmode = "numeric";
-    widthInput.value = plank.width;
-    widthInput.onchange = function() {
-        plank.width = widthInput.value;
-        row.cells[0].innerText = plank.width + " mm";
-    };
+    var cells = [row.cells[0], row.cells[1], row.cells[2]]; // width, length, quantity cells
+    var properties = ['width', 'length', 'quantity']; // corresponding properties in plank object
+    var inputs = [];
 
-    var lengthInput = document.createElement("input");
-    lengthInput.type = "tel";
-    lengthInput.pattern = "[0-9]*";
-    lengthInput.inputmode = "numeric";
-    lengthInput.value = plank.length;
-    lengthInput.onchange = function() {
-        plank.length = lengthInput.value;
-        row.cells[1].innerText = plank.length + " mm";
-    };
-
-    var quantityInput = document.createElement("input");
-    quantityInput.type = "tel";
-    quantityInput.pattern = "[0-9]*";
-    quantityInput.inputmode = "numeric";
-    quantityInput.value = plank.quantity;
-    quantityInput.onchange = function() {
-        plank.quantity = quantityInput.value;
-        row.cells[2].innerText = plank.quantity + " pcs";
-        row.cells[3].innerText = Math.ceil(plank.quantity / 2);
-    };
-
-    var saveButton = document.createElement("button");
-    saveButton.textContent = "Enregistrer";
-    saveButton.onclick = function() {
+    for (var i = 0; i < cells.length; i++) {
+        var input = document.createElement("input");
+        input.type = "tel";
+        input.pattern = "[0-9]*";
+        input.inputmode = "numeric";
+        input.value = plank[properties[i]];
+        inputs.push(input);
+        cells[i].innerHTML = '';
+        cells[i].appendChild(input);
+    }
+    var modifyButton = document.createElement("button");    
+    modifyButton.innerText = "Modifier";
+    modifyButton.onclick = function() { editPlank(index); };
+   var confirmButton = document.createElement("button");
+    confirmButton.innerText = "Confirmer";
+    confirmButton.onclick = function() {
+        for (var i = 0; i < inputs.length; i++) {
+            plank[properties[i]] = inputs[i].value;
+            cells[i].innerText = plank[properties[i]] + (i < 2 ? " mm" : " pcs"); // add units
+        };
+        
         calculateEdgeProtection();
+        row.cells[4].innerHTML = '';
+        row.cells[4].appendChild(modifyButton);
     };
-
-     var closeButton = document.createElement("button");
-    closeButton.textContent = "Fermer";
-    closeButton.onclick = function() {
-        row.cells[0].innerText = plank.width + " mm";
-        row.cells[1].innerText = plank.length + " mm";
-        row.cells[2].innerText = plank.quantity + " pcs";
-        row.cells[3].innerText = Math.ceil(plank.quantity / 2);
-        row.cells[4].innerHTML = '<button onclick="editPlank(' + index + ')">Modifier</button>';
-    };
-
-
-    row.cells[4].innerText = '';
-    row.cells[4].appendChild(closeButton);
-
-    var actionsCell = document.getElementById("plankTable").rows[index + 1].cells[4];
-    actionsCell.innerHTML = "";
-    actionsCell.appendChild(widthInput);
-    actionsCell.appendChild(lengthInput);
-    actionsCell.appendChild(quantityInput);
-    actionsCell.appendChild(saveButton);
-    actionsCell.appendChild(closeButton);
-    calculateEdgeProtection();
-
+    row.cells[4].innerHTML = '';
+    row.cells[4].appendChild(confirmButton);
 };
 
 
