@@ -101,6 +101,10 @@ function editPlank(index) {
             plank[properties[i]] = inputs[i].value;
             cells[i].innerText = plank[properties[i]] + (i < 2 ? " mm" : " pcs"); // add units
         };
+         // Recalculate the number of packages and update the packageCell
+         var packageCell = row.cells[3];
+        var quantity = parseInt(plank['quantity']);
+        packageCell.innerHTML = Math.ceil(quantity / 2);
         
         calculateEdgeProtection();
         row.cells[4].innerHTML = '';
